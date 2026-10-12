@@ -1,37 +1,24 @@
-import { test, expect, Locator } from '@playwright/test';
-
-let username: Locator;
-let password: Locator;
-let loginButton: Locator;
+import { test, expect } from '@playwright/test';
+import { login } from '../helpers/login';
 
 
-//To open the page before each test
-test.beforeEach(async ({ page }) => {
-await page.goto('/');
-username = page.getByPlaceholder('Username');
-password = page.getByPlaceholder('Password');
-loginButton = page.getByRole('button', { name: 'Login' });
-});
-
-//1. Test to verify the login page loads and verify title,username password login button displayed is correct
+//1.Login page loads: title,username,password and login button are shown
 //test('testtitle', async({page}) => { test steps here});
 test('Verify login page loads successfully', async ({ page }) => {
 
-const heading:string = await page.title();
-console.log('Page title is: ' , heading)
+await page.goto('/');    
+
+console.log('Page title is: ' , await page.title());
 
 await expect(page).toHaveTitle('Swag Labs');
-await expect(username).toBeVisible();
-await expect(password).toBeVisible();
-await expect(loginButton).toBeVisible();
+await expect(page.getByPlaceholder('Username')).toBeVisible();
+await expect(page.getByPlaceholder('Password')).toBeVisible();
+await expect(page.getByRole('button', {name: 'Login'})).toBeVisible();
 });
 
-//2. go to / , enter username,enter password, click login and
-//verify url ends with /inventory.html;page heading reads products
+//2. Valid login goes to Products page
 test('Verify user can login successfully', async ({ page }) => {
-await username.fill('standard_user');
-await password.fill('secret_sauce');
-await loginButton.click();
+await login(page);
 
 await expect(page).toHaveURL(/inventory\.html$/);
 await expect(page.getByTestId('title')).toHaveText('Products');
