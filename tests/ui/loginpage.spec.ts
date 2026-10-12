@@ -26,7 +26,7 @@ await expect(password).toBeVisible();
 await expect(loginButton).toBeVisible();
 });
 
-//go to / , enter username,enter password, click login
+//2. go to / , enter username,enter password, click login and
 //verify url ends with /inventory.html;page heading reads products
 test('Verify user can login successfully', async ({ page }) => {
 await username.fill('standard_user');
