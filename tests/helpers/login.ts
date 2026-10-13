@@ -10,7 +10,7 @@ await page.getByRole('button', {name: 'Login'}).click();
 
 }
 
-export async function loginerror(page:Page){
+export async function closeErrorAndCheckHidden(page:Page){
 await expect(page.getByTestId('error-button')).toBeVisible();
 await page.getByTestId('error-button').click();
 await expect(page.getByTestId('error-button')).toBeHidden();
