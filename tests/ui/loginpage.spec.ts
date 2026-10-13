@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login } from '../helpers/login';
+import { login, loginerror } from '../helpers/login';
 
 
 //1.Login page loads: title,username,password and login button are shown
@@ -24,9 +24,44 @@ await expect(page).toHaveURL(/inventory\.html$/);
 await expect(page.getByTestId('title')).toHaveText('Products');
 });
 
+//3. Verify the error for a locked out user
+test('Verify error for locked out user', async ({ page }) => {
+await login(page, 'locked_out_user');
+
+await expect(page.getByTestId('error')).toHaveText('Epic sadface: Sorry, this user has been locked out.');
+await expect(page).toHaveURL('/');
+
+await loginerror(page);
+});
 
 
+//4. Verify the error with empty username
+test('Verify error with empty username', async ({ page }) => {
+await login(page, '');
+
+await expect(page.getByTestId('error')).toHaveText('Epic sadface: Username is required');
+await expect(page).toHaveURL('/');
+
+await loginerror(page);
+});
+
+//5. Verify the error with empty password
+test('Verify error with empty password', async ({ page }) => {
+await login(page, 'standard_user', '');
+
+await expect(page.getByTestId('error')).toHaveText('Epic sadface: Password is required');
+await expect(page).toHaveURL('/');
+
+await loginerror(page);
+});
 
 
+//5. Verify the error with wrong password
+test('Verify error with wrong password', async ({ page }) => {
+await login(page, 'standard_user', 'wrongpassword');
 
+await expect(page.getByTestId('error')).toHaveText('Epic sadface: Username and password do not match any user in this service');
+await expect(page).toHaveURL('/');
 
+await loginerror(page);
+});
