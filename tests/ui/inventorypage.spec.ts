@@ -181,3 +181,41 @@ test("Verify with cmbined filters that the only T-shirt with Remove is the Bolt 
   await expect(tShirtInCart).toHaveCount(1);
   await expect(tShirtInCart).toContainText("Sauce Labs Bolt T-Shirt");
 });
+
+//**CSS selector exercise */
+test('TC-12 six products shown', async ({ page }) => {
+  await expect(page.getByTestId('inventory-item')).toHaveCount(6);
+});
+
+test('TC-12 six products shown, CSS version', async ({ page }) => {
+  await expect(page.locator('.inventory_item')).toHaveCount(6);
+});
+
+test('TC-13 every product is complete', async ({ page }) => {
+  const cards = page.getByTestId('inventory-item');
+  await expect(cards).toHaveCount(6);
+  for (const c of await cards.all()) {
+    await expect(c.getByTestId('inventory-item-name')).toBeVisible();
+    await expect(c.getByTestId('inventory-item-desc')).toBeVisible();
+    await expect(c.getByRole('img')).toBeVisible();
+    await expect(c.getByTestId('inventory-item-price')).toHaveText(/^\$\d+\.\d{2}$/);
+  }
+});
+
+test('TC-14 product page matches the list', async ({ page }) => {
+  const backpack = getToProductCard(page, 'Sauce Labs Backpack');
+  const name = await backpack.getByTestId('inventory-item-name').innerText();
+  const price = await backpack.getByTestId('inventory-item-price').innerText();
+
+  await backpack.getByTestId('inventory-item-name').click();
+  await expect(page).toHaveURL(/inventory-item\.html/);
+  //after the URL check that waits for something only the product page has, the “Back to products” button:
+  await expect(page.getByTestId('back-to-products')).toBeVisible();
+  await expect(page.getByTestId('inventory-item-name')).toHaveText(name);
+  await expect(page.getByTestId('inventory-item-price')).toHaveText(price);
+
+  await page.getByTestId('back-to-products').click();
+  await expect(page).toHaveURL(/\/inventory\.html$/);
+});
+
+
