@@ -183,63 +183,67 @@ test("Verify with cmbined filters that the only T-shirt with Remove is the Bolt 
 });
 
 //**CSS selector exercise */
-test('TC-12 six products shown', async ({ page }) => {
-  await expect(page.getByTestId('inventory-item')).toHaveCount(6);
+test("TC-12 six products shown", async ({ page }) => {
+  await expect(page.getByTestId("inventory-item")).toHaveCount(6);
 });
 
-test('TC-12 six products shown, CSS version', async ({ page }) => {
-  await expect(page.locator('.inventory_item')).toHaveCount(6);
+test("TC-12 six products shown, CSS version", async ({ page }) => {
+  await expect(page.locator(".inventory_item")).toHaveCount(6);
 });
 
-test('TC-13 every product is complete', async ({ page }) => {
-  const cards = page.getByTestId('inventory-item');
+test("TC-13 every product is complete", async ({ page }) => {
+  const cards = page.getByTestId("inventory-item");
   await expect(cards).toHaveCount(6);
   for (const c of await cards.all()) {
-    await expect(c.getByTestId('inventory-item-name')).toBeVisible();
-    await expect(c.getByTestId('inventory-item-desc')).toBeVisible();
-    await expect(c.getByRole('img')).toBeVisible();
-    await expect(c.getByTestId('inventory-item-price')).toHaveText(/^\$\d+\.\d{2}$/);
+    await expect(c.getByTestId("inventory-item-name")).toBeVisible();
+    await expect(c.getByTestId("inventory-item-desc")).toBeVisible();
+    await expect(c.getByRole("img")).toBeVisible();
+    await expect(c.getByTestId("inventory-item-price")).toHaveText(
+      /^\$\d+\.\d{2}$/,
+    );
   }
 });
 
-test('TC-14 product page matches the list', async ({ page }) => {
-  const backpack = getToProductCard(page, 'Sauce Labs Backpack');
-  const name = await backpack.getByTestId('inventory-item-name').innerText();
-  const price = await backpack.getByTestId('inventory-item-price').innerText();
+test("TC-14 product page matches the list", async ({ page }) => {
+  const backpack = getToProductCard(page, "Sauce Labs Backpack");
+  const name = await backpack.getByTestId("inventory-item-name").innerText();
+  const price = await backpack.getByTestId("inventory-item-price").innerText();
 
-  await backpack.getByTestId('inventory-item-name').click();
+  await backpack.getByTestId("inventory-item-name").click();
   await expect(page).toHaveURL(/inventory-item\.html/);
   //after the URL check that waits for something only the product page has, the “Back to products” button:
-  await expect(page.getByTestId('back-to-products')).toBeVisible();
-  await expect(page.getByTestId('inventory-item-name')).toHaveText(name);
-  await expect(page.getByTestId('inventory-item-price')).toHaveText(price);
+  await expect(page.getByTestId("back-to-products")).toBeVisible();
+  await expect(page.getByTestId("inventory-item-name")).toHaveText(name);
+  await expect(page.getByTestId("inventory-item-price")).toHaveText(price);
 
-  await page.getByTestId('back-to-products').click();
+  await page.getByTestId("back-to-products").click();
   await expect(page).toHaveURL(/\/inventory\.html$/);
 });
 
-test('TC-15 price by XPath, then by filter', async ({ page }) => {
+test("TC-15 price by XPath, then by filter", async ({ page }) => {
   const byXPath = page.locator(
     "//div[text()='Sauce Labs Backpack']" +
       "/ancestor::div[contains(@class,'inventory_item_description')]" +
-      "//div[contains(@class,'inventory_item_price')]"
+      "//div[contains(@class,'inventory_item_price')]",
   );
-  await expect(byXPath).toHaveText('$29.99');
+  await expect(byXPath).toHaveText("$29.99");
 
-  const byFilter = getToProductCard(page, 'Sauce Labs Backpack').getByTestId('inventory-item-price');
-  await expect(byFilter).toHaveText('$29.99');
+  const byFilter = getToProductCard(page, "Sauce Labs Backpack").getByTestId(
+    "inventory-item-price",
+  );
+  await expect(byFilter).toHaveText("$29.99");
 });
 
-test('TC-16 price list', async ({ page }) => {
-  await expect(page.getByTestId('inventory-item')).toHaveCount(6);
-  const names = await page.getByTestId('inventory-item-name').allTextContents();
-  const prices = await page.getByTestId('inventory-item-price').allTextContents();
+test("TC-16 price list", async ({ page }) => {
+  await expect(page.getByTestId("inventory-item")).toHaveCount(6);
+  const names = await page.getByTestId("inventory-item-name").allTextContents();
+  const prices = await page
+    .getByTestId("inventory-item-price")
+    .allTextContents();
 
   expect(names).toHaveLength(6);
   expect(prices).toHaveLength(6);
   for (const p of prices) {
-    expect(Number(p.replace('$', ''))).toBeGreaterThan(0);
+    expect(Number(p.replace("$", ""))).toBeGreaterThan(0);
   }
 });
-
-
