@@ -218,4 +218,28 @@ test('TC-14 product page matches the list', async ({ page }) => {
   await expect(page).toHaveURL(/\/inventory\.html$/);
 });
 
+test('TC-15 price by XPath, then by filter', async ({ page }) => {
+  const byXPath = page.locator(
+    "//div[text()='Sauce Labs Backpack']" +
+      "/ancestor::div[contains(@class,'inventory_item_description')]" +
+      "//div[contains(@class,'inventory_item_price')]"
+  );
+  await expect(byXPath).toHaveText('$29.99');
+
+  const byFilter = getToProductCard(page, 'Sauce Labs Backpack').getByTestId('inventory-item-price');
+  await expect(byFilter).toHaveText('$29.99');
+});
+
+test('TC-16 price list', async ({ page }) => {
+  await expect(page.getByTestId('inventory-item')).toHaveCount(6);
+  const names = await page.getByTestId('inventory-item-name').allTextContents();
+  const prices = await page.getByTestId('inventory-item-price').allTextContents();
+
+  expect(names).toHaveLength(6);
+  expect(prices).toHaveLength(6);
+  for (const p of prices) {
+    expect(Number(p.replace('$', ''))).toBeGreaterThan(0);
+  }
+});
+
 
