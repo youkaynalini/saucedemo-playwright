@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { login, closeErrorAndCheckHidden } from "../helpers/login";
+import { login, closeErrorAndCheckHidden, expectOnProductsPage } from "../helpers/login";
 
 //1.Login page loads: title,username,password and login button are shown
 //test('testtitle', async({page}) => { test steps here});
@@ -17,9 +17,7 @@ test("Verify login page loads successfully", async ({ page }) => {
 //2. Valid login goes to Products page
 test("Verify user can login successfully", async ({ page }) => {
   await login(page);
-
-  await expect(page).toHaveURL(/inventory\.html$/);
-  await expect(page.getByTestId("title")).toHaveText("Products");
+  await expectOnProductsPage(page);
 });
 
 //3. Verify the error for a locked out user

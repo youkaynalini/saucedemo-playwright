@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { login } from "../helpers/login";
 import { addToCart, getToProductCard } from "../helpers/inventory";
-import { getToCartItemCard } from "../helpers/cart";
+import { getItemRow } from "../helpers/cart";
 
 test.beforeEach(async ({ page }) => {
   //login with the correct user and each test here shoudl start from Products page
@@ -15,7 +15,7 @@ test("Verify the cart displays the added item with correct details.", async ({
   await addToCart(page, "Sauce Labs Backpack");
   await page.getByTestId("shopping-cart-link").click();
   await expect(page).toHaveURL("https://www.saucedemo.com/cart.html");
-  const cartItemCard = getToCartItemCard(page, "Sauce Labs Backpack");
+  const cartItemCard = getItemRow(page, "Sauce Labs Backpack");
   await expect(cartItemCard.getByTestId("item-quantity")).toHaveText("1");
   await expect(cartItemCard.getByTestId("inventory-item-price")).toContainText(
     "29.99",
@@ -45,7 +45,7 @@ test("Verify cheapest product filtered by price, added, shown in cart at $7.99",
 
   // open the cart and find that product's row
   await page.getByTestId("shopping-cart-link").click();
-  const cartRow = getToCartItemCard(page, cheapestName);
+  const cartRow = getItemRow(page, cheapestName);
 
   await expect(cartRow).toHaveCount(1);
   await expect(cartRow.getByTestId("inventory-item-price")).toHaveText("$7.99");

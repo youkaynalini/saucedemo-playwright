@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { login } from "../helpers/login";
 import {
+  addMoreProductsToCart,
   addToCart,
   getToProductCard,
   removeFromCart,
 } from "../helpers/inventory";
+import { expectCartCount } from "../helpers/cart";
 
 test.beforeEach(async ({ page }) => {
   //login with the correct user and each test here shoudl start from Products page
@@ -15,16 +17,17 @@ test("Verify adding one product updates its button to Remove and the cart badge 
   page,
 }) => {
   await addToCart(page, "Sauce Labs Backpack");
-  await expect(page.getByTestId("shopping-cart-badge")).toHaveText("1");
+   await expectCartCount(page, 1);
 });
 
 // TC-09 Add two products: add Backpack, then add Bike Light; cart badge shows 2
 test("Verify adding Backpack and Bike Light shows 2 on the cart badge", async ({
   page,
 }) => {
-  await addToCart(page, "Sauce Labs Backpack");
-  await addToCart(page, "Sauce Labs Bike Light");
-  await expect(page.getByTestId("shopping-cart-badge")).toHaveText("2");
+  const products = ["Sauce Labs Backpack", "Sauce Labs Bike Light"];
+  await addMoreProductsToCart(page, products );
+  await expectCartCount(page, products.length);
+
 });
 
 // TC-10 Remove from products page: add Backpack, click Remove on the same card; button reads Add to cart again and the cart badge is not visible
@@ -33,7 +36,7 @@ test('Verify removing the Backpack restores the "Add to cart" button and hides t
 }) => {
   await addToCart(page, "Sauce Labs Backpack");
   await removeFromCart(page, "Sauce Labs Backpack");
-  await expect(page.getByTestId("shopping-cart-badge")).toBeHidden();
+  await expectCartCount(page, 0);
 });
 
 // TC-F01 filter({ hasText }), one product by name: filter cards by Sauce Labs Fleece Jacket, find its Add to cart button; button visible and card shows $49.99
