@@ -16,7 +16,6 @@ export async function expectCartCount(page: Page, count: number) {
     // the badge should show the number
     await expect(badge).toHaveText(String(count));
   }
-
 }
 
 export async function expectItemsListed(page: Page, products: string[]) {
@@ -34,12 +33,11 @@ export async function expectItemsListed(page: Page, products: string[]) {
 
 export async function goToCheckout(page: Page) {
   // click Checkout
-    await page.getByTestId("checkout").click();
+  await page.getByTestId("checkout").click();
   // check the URL
   await expect(page).toHaveURL(/checkout-step-one\.html$/);
   // check the title
-  await expect(page.getByTestId("title")).toHaveText("Checkout: Your Information");
+  await expect(page.getByTestId("title")).toHaveText(
+    "Checkout: Your Information",
+  );
 }
-
-
-

@@ -14,12 +14,10 @@ export async function addToCart(page: Page, productName: string) {
 
 //helper to add more products to cart
 export async function addMoreProductsToCart(page: Page, products: string[]) {
-for (const name of products) {
-  await addToCart(page, name);
+  for (const name of products) {
+    await addToCart(page, name);
+  }
 }
-}
-
-
 
 export async function removeFromCart(page: Page, productName: string) {
   const productCard = getToProductCard(page, productName);

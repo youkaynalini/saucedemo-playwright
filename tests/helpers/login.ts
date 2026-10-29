@@ -28,9 +28,8 @@ export async function logout(page: Page) {
   // open the menu
   // click Logout
   // we're on the Login page
-await page.getByRole("button", { name: "Open Menu" }).click();
+  await page.getByRole("button", { name: "Open Menu" }).click();
   await page.getByRole("button", { name: "Logout" }).click();
   await expect(page).toHaveURL("/");
   await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
-
 }

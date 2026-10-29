@@ -17,7 +17,7 @@ test("Verify adding one product updates its button to Remove and the cart badge 
   page,
 }) => {
   await addToCart(page, "Sauce Labs Backpack");
-   await expectCartCount(page, 1);
+  await expectCartCount(page, 1);
 });
 
 // TC-09 Add two products: add Backpack, then add Bike Light; cart badge shows 2
@@ -25,9 +25,8 @@ test("Verify adding Backpack and Bike Light shows 2 on the cart badge", async ({
   page,
 }) => {
   const products = ["Sauce Labs Backpack", "Sauce Labs Bike Light"];
-  await addMoreProductsToCart(page, products );
+  await addMoreProductsToCart(page, products);
   await expectCartCount(page, products.length);
-
 });
 
 // TC-10 Remove from products page: add Backpack, click Remove on the same card; button reads Add to cart again and the cart badge is not visible

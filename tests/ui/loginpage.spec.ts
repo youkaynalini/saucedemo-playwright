@@ -1,5 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { login, closeErrorAndCheckHidden, expectOnProductsPage } from "../helpers/login";
+import {
+  login,
+  closeErrorAndCheckHidden,
+  expectOnProductsPage,
+} from "../helpers/login";
 
 //1.Login page loads: title,username,password and login button are shown
 //test('testtitle', async({page}) => { test steps here});
